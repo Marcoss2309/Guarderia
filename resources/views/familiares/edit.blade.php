@@ -6,13 +6,14 @@
         <div class="col-md-8">
 
             <div class="card card-bienestar animate-fade-in">
-                <div class="card-header-bienestar text-center">
-                    <h4 class="mb-0">➕ Asignar un Familiar</h4>
+                <div class="card-header-bienestar text-center" style="background: linear-gradient(135deg, #FFC107, #e6a800);">
+                    <h4 class="mb-0">✏️ Editar Familiar</h4>
                 </div>
 
                 <div class="card-body p-4">
-                    <form action="{{ route('familiares.store') }}" method="post">
+                    <form action="{{ route('familiares.update', $familiar->id_familiar) }}" method="post">
                         @csrf
+                        @method('PUT')
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -20,7 +21,7 @@
                                 <select class="form-control @error('id_persona') is-invalid @enderror" name="id_persona" required>
                                     <option value="">Seleccione una persona...</option>
                                     @foreach($personas as $persona)
-                                        <option value="{{ $persona->id_persona }}" {{ old('id_persona') == $persona->id_persona ? 'selected' : '' }}>
+                                        <option value="{{ $persona->id_persona }}" {{ old('id_persona', $familiar->id_persona) == $persona->id_persona ? 'selected' : '' }}>
                                             {{ $persona->nombre }} {{ $persona->apellido_paterno }} {{ $persona->apellido_materno }}
                                         </option>
                                     @endforeach
@@ -33,7 +34,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold" style="color: #8B0000;">📞 Teléfono</label>
                                 <input type="text" class="form-control @error('telefono') is-invalid @enderror" 
-                                       name="telefono" placeholder="Ej. 7224146785" value="{{ old('telefono') }}" required>
+                                       name="telefono" placeholder="Ej. 7224146785" value="{{ old('telefono', $familiar->telefono) }}" required>
                                 @error('telefono')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -44,7 +45,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold" style="color: #8B0000;">🆔 DNI</label>
                                 <input type="text" class="form-control @error('dni') is-invalid @enderror" 
-                                       name="dni" placeholder="Ej. 12345678A" value="{{ old('dni') }}" required>
+                                       name="dni" placeholder="Ej. 12345678A" value="{{ old('dni', $familiar->dni) }}" required>
                                 @error('dni')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -55,7 +56,7 @@
                                 <select class="form-control @error('id_parentesco') is-invalid @enderror" name="id_parentesco" required>
                                     <option value="">Seleccione un parentesco...</option>
                                     @foreach($parentescos as $parentesco)
-                                        <option value="{{ $parentesco->id_parentesco }}" {{ old('id_parentesco') == $parentesco->id_parentesco ? 'selected' : '' }}>
+                                        <option value="{{ $parentesco->id_parentesco }}" {{ old('id_parentesco', $familiar->id_parentesco) == $parentesco->id_parentesco ? 'selected' : '' }}>
                                             {{ $parentesco->nombre }}
                                         </option>
                                     @endforeach
@@ -70,7 +71,7 @@
                             <div class="col-md-8 mb-3">
                                 <label class="form-label fw-bold" style="color: #8B0000;">📍 Dirección</label>
                                 <input type="text" class="form-control @error('direccion') is-invalid @enderror" 
-                                       name="direccion" placeholder="Calle, número, colonia, ciudad" value="{{ old('direccion') }}" required>
+                                       name="direccion" placeholder="Calle, número, colonia, ciudad" value="{{ old('direccion', $familiar->direccion) }}" required>
                                 @error('direccion')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -81,13 +82,9 @@
                                 <select class="form-control @error('id_ninio') is-invalid @enderror" name="id_ninio" required>
                                     <option value="">Seleccione un niño...</option>
                                     @foreach($ninios as $ninio)
-                                        <option value="{{ $ninio->id_ninio }}" {{ old('id_ninio') == $ninio->id_ninio ? 'selected' : '' }}>
-                                            @if($ninio->persona)
-                                                🧸 {{ $ninio->persona->nombre }} {{ $ninio->persona->apellido_paterno }}
-                                                (Mat: {{ $ninio->matricula }})
-                                            @else
-                                                Niño #{{ $ninio->id_ninio }}
-                                            @endif
+                                        <option value="{{ $ninio->id_ninio }}" {{ old('id_ninio', $familiar->id_ninio) == $ninio->id_ninio ? 'selected' : '' }}>
+                                            🧸 {{ $ninio->persona->nombre ?? 'Niño' }} {{ $ninio->persona->apellido_paterno ?? '' }}
+                                            (Mat: {{ $ninio->matricula }})
                                         </option>
                                     @endforeach
                                 </select>
@@ -99,8 +96,9 @@
 
                         <div class="d-flex justify-content-between mt-3">
                             <a href="{{ route('familiares.index') }}" class="btn btn-outline-secondary">Cancelar</a>
-                            <button type="reset" class="btn btn-outline-warning">Limpiar</button>
-                            <button type="submit" class="btn btn-bienestar px-4">💾 Guardar Familiar</button>
+                            <button type="submit" class="btn btn-bienestar px-4" style="background: linear-gradient(135deg, #FFC107, #e6a800); color: #333;">
+                                💾 Actualizar Familiar
+                            </button>
                         </div>
 
                     </form>

@@ -6,18 +6,19 @@
         <div class="col-md-8">
 
             <div class="card card-bienestar animate-fade-in">
-                <div class="card-header-bienestar text-center">
-                    <h4 class="mb-0">➕ Crear Nuevo Niño</h4>
+                <div class="card-header-bienestar text-center" style="background: linear-gradient(135deg, #FFC107, #e6a800);">
+                    <h4 class="mb-0">✏️ Editar Niño</h4>
                 </div>
 
                 <div class="card-body p-4">
-                    <form action="{{ route('ninios.store') }}" method="post">
+                    <form action="{{ route('ninios.update', $ninio->id_ninio) }}" method="post">
                         @csrf
+                        @method('PUT')
 
                         <div class="mb-3">
                             <label class="form-label fw-bold" style="color: #8B0000;">📝 Matrícula</label>
                             <input type="text" class="form-control @error('matricula') is-invalid @enderror" 
-                                   name="matricula" placeholder="Ej. AE328" value="{{ old('matricula') }}" required>
+                                   name="matricula" value="{{ old('matricula', $ninio->matricula) }}" required>
                             @error('matricula')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -29,7 +30,7 @@
                                 <select class="form-control @error('id_persona') is-invalid @enderror" name="id_persona" required>
                                     <option value="">Seleccione una persona...</option>
                                     @foreach($personas as $persona)
-                                        <option value="{{ $persona->id_persona }}" {{ old('id_persona') == $persona->id_persona ? 'selected' : '' }}>
+                                        <option value="{{ $persona->id_persona }}" {{ old('id_persona', $ninio->id_persona) == $persona->id_persona ? 'selected' : '' }}>
                                             {{ $persona->nombre }} {{ $persona->apellido_paterno }} {{ $persona->apellido_materno }}
                                         </option>
                                     @endforeach
@@ -44,7 +45,7 @@
                                 <select class="form-control @error('id_centro') is-invalid @enderror" name="id_centro" required>
                                     <option value="">Seleccione un centro...</option>
                                     @foreach($centros as $centro)
-                                        <option value="{{ $centro->id_centro }}" {{ old('id_centro') == $centro->id_centro ? 'selected' : '' }}>
+                                        <option value="{{ $centro->id_centro }}" {{ old('id_centro', $ninio->id_centro) == $centro->id_centro ? 'selected' : '' }}>
                                             🏫 {{ $centro->nombre }}
                                         </option>
                                     @endforeach
@@ -58,7 +59,7 @@
                         <div class="mb-4">
                             <label class="form-label fw-bold" style="color: #8B0000;">📅 Fecha de Ingreso</label>
                             <input type="date" class="form-control @error('fecha_ingreso') is-invalid @enderror" 
-                                   name="fecha_ingreso" value="{{ old('fecha_ingreso') }}" required>
+                                   name="fecha_ingreso" value="{{ old('fecha_ingreso', $ninio->fecha_ingreso) }}" required>
                             @error('fecha_ingreso')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -66,8 +67,9 @@
 
                         <div class="d-flex justify-content-between">
                             <a href="{{ route('ninios.index') }}" class="btn btn-outline-secondary">Cancelar</a>
-                            <button type="reset" class="btn btn-outline-warning">Limpiar</button>
-                            <button type="submit" class="btn btn-bienestar px-4">💾 Guardar Niño</button>
+                            <button type="submit" class="btn btn-bienestar px-4" style="background: linear-gradient(135deg, #FFC107, #e6a800); color: #333;">
+                                💾 Actualizar Niño
+                            </button>
                         </div>
 
                     </form>

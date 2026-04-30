@@ -17,5 +17,4 @@ class Plato extends Model
     protected $fillable=[
     'nombre',
     'precio'];
-    //created_at, updated_at, deleted_at (timestamps) pueden llevar valores null
 }

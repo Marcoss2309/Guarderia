@@ -5,49 +5,78 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
 
-           <div class="card shadow-lg border-0">
-                <div class="card-header bg-success text-white text-center">
-                    <h4 class="mb-0">Lista de Platos</h4>
+            <div class="card card-bienestar animate-fade-in">
+                <div class="card-header-bienestar text-center">
+                    <h4 class="mb-0">Los Platos del Bienestar</h4>
                 </div>
-                 <div class="row">
-                   <div class="col-1">
-                       <a type="button" class="btn btn-info" href="{{route("platos.create")}}">Agregar</a>
-
-                   </div>
-               </div>
 
                 <div class="card-body p-4">
 
+                    <div class="d-flex justify-content-end mb-3">
+                        <a class="btn btn-bienestar btn-sm" href="{{ route('platos.create') }}">
+                            ➕ Agregar Plato
+                        </a>
+                    </div>
+
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
+
                     <div class="table-responsive">
                         <table class="table table-hover table-striped align-middle text-center">
-                            <thead class="table-dark">
+                            <thead style="background: linear-gradient(135deg, #8B0000, #6B1D2C); color: white;">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Nombre de los Platos</th>
+                                    <th>No.</th>
+                                    <th>Nombre del Plato</th>
                                     <th>Precio</th>
-                                    <th>Accion</th>
-
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                @foreach($platos as $plato)
+                                @forelse($platos as $plato)
                                 <tr>
-                                    <td class="fw-bold">{{$loop->index+1}}</td>
-                                    <td>{{$plato->nombre}}</td>
-                                    <td>{{$plato->precio}}</td>
+                                    <td class="fw-bold">{{ $loop->iteration }}</td>
+                                    <td>{{ $plato->nombre }}</td>
                                     <td>
-                                        <form action="{{route("platos.destroy",$plato)}}" method="post">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Eliminar</button>
-
-                                        </form>
+                                        <span class="badge" style="background-color: #128c7e; color: white; padding: 8px 15px;">
+                                            💲 {{ number_format($plato->precio, 2) }}
+                                        </span>
                                     </td>
-
-                                
+                                    <td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a href="{{ route('platos.edit', $plato->id_plato) }}"
+                                               class="btn btn-sm" 
+                                               style="background-color: #FFC107; color: #333; border-radius: 20px;">
+                                                ✏️ Editar
+                                            </a>
+                                            <form action="{{ route('platos.destroy', $plato->id_plato) }}" 
+                                                  method="POST" 
+                                                  class="d-inline"
+                                                  onsubmit="return confirm('¿Eliminar el plato {{ $plato->nombre }}?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-sm" 
+                                                        style="background-color: #8B0000; color: white; border-radius: 20px;">
+                                                    🗑️ Eliminar
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
                                 </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center py-4">
+                                            <div class="alert alert-info mb-0">
+                                                No hay platos registrados.
+                                                <a href="{{ route('platos.create') }}" class="alert-link">Agregar el primero</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

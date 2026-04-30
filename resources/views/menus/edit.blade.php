@@ -6,13 +6,14 @@
         <div class="col-md-8">
 
             <div class="card card-bienestar animate-fade-in">
-                <div class="card-header-bienestar text-center">
-                    <h4 class="mb-0">➕ Crear un Menú</h4>
+                <div class="card-header-bienestar text-center" style="background: linear-gradient(135deg, #FFC107, #e6a800);">
+                    <h4 class="mb-0">✏️ Editar Menú</h4>
                 </div>
 
                 <div class="card-body p-4">
-                    <form action="{{ route('menus.store') }}" method="post">
+                    <form action="{{ route('menus.update', $menu->id_menu) }}" method="post">
                         @csrf
+                        @method('PUT')
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -20,7 +21,8 @@
                                 <select class="form-control @error('id_plato') is-invalid @enderror" name="id_plato" required>
                                     <option value="">Seleccione un plato...</option>
                                     @foreach($platos as $plato)
-                                        <option value="{{ $plato->id_plato }}" {{ old('id_plato') == $plato->id_plato ? 'selected' : '' }}>
+                                        <option value="{{ $plato->id_plato }}" 
+                                            {{ old('id_plato', $menu->id_plato) == $plato->id_plato ? 'selected' : '' }}>
                                             🍽️ {{ $plato->nombre }} - ${{ number_format($plato->precio, 2) }}
                                         </option>
                                     @endforeach
@@ -35,7 +37,8 @@
                                 <select class="form-control @error('id_ingrediente') is-invalid @enderror" name="id_ingrediente" required>
                                     <option value="">Seleccione un ingrediente...</option>
                                     @foreach($ingredientes as $ingrediente)
-                                        <option value="{{ $ingrediente->id_ingrediente }}" {{ old('id_ingrediente') == $ingrediente->id_ingrediente ? 'selected' : '' }}>
+                                        <option value="{{ $ingrediente->id_ingrediente }}" 
+                                            {{ old('id_ingrediente', $menu->id_ingrediente) == $ingrediente->id_ingrediente ? 'selected' : '' }}>
                                             🥗 {{ $ingrediente->nombre }}
                                         </option>
                                     @endforeach
@@ -48,8 +51,9 @@
 
                         <div class="d-flex justify-content-between mt-4">
                             <a href="{{ route('menus.index') }}" class="btn btn-outline-secondary">Cancelar</a>
-                            <button type="reset" class="btn btn-outline-warning">Limpiar</button>
-                            <button type="submit" class="btn btn-bienestar px-4">💾 Guardar Menú</button>
+                            <button type="submit" class="btn btn-bienestar px-4" style="background: linear-gradient(135deg, #FFC107, #e6a800); color: #333;">
+                                💾 Actualizar Menú
+                            </button>
                         </div>
 
                     </form>

@@ -32,16 +32,20 @@ class PersonaController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
-        //
-         $request->validate([
-            'nombre' => 'required',
-            'apellido_paterno' => 'required',
-            'apellido_materno' => 'required',
-            'fecha_nacimiento' => 'required',
+        // 1. Validamos PRIMERO (añadí el apellido_materno que faltaba en la segunda validación)
+        $request->validate([
+            'nombre' => 'required|max:100',
+            'apellido_paterno' => 'required|max:100',
+            'apellido_materno' => 'required|max:100',
+            'fecha_nacimiento' => 'required|date',
         ]);
+
+        // 2. Creamos después de validar
         Persona::create($request->all());
-        return redirect()->route("personas.index");
+
+        // 3. Redireccionamos con mensaje de éxito
+        return redirect()->route("personas.index")->with('success', '¡Persona creada con éxito!');
+
     }
 
     /**
@@ -55,18 +59,31 @@ class PersonaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Persona $persona)
+    public function edit($id)
     {
-        //
+    $persona = Persona::findOrFail($id); // Busca a la persona o lanza error 404
+    return view('personas.edit', compact('persona')); // Te manda a la vista que crearemos
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Persona $persona)
+    public function update(Request $request, $id)
     {
-        //
-    }
+    // 1. Validamos los datos nuevos
+        $request->validate([
+            'nombre' => 'required|max:100',
+            'apellido_paterno' => 'required|max:100',
+            'apellido_materno' => 'required|max:100',
+            'fecha_nacimiento' => 'required|date',
+        ]);
+
+        // 2. Buscamos y actualizamos
+        $persona = Persona::findOrFail($id);
+        $persona->update($request->all());
+
+        return redirect()->route('personas.index')->with('success', '¡Registro actualizado!');
+}
 
     /**
      * Remove the specified resource from storage.

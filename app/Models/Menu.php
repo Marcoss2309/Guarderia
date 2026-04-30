@@ -7,15 +7,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Menu extends Model
 {
-     use softDeletes;
+     use SoftDeletes;
     //
-     protected $table="menus";
+    protected $table="menus";
     protected $primaryKey="id_menu";
-    public $timestamps=false;
 
     protected $fillable=[
         "id_plato",
         "id_ingrediente",
     ];
 
+    public function plato(){
+        return $this->belongsTo(Plato::class,'id_plato');
+    }
+    public function ingrediente(){
+        return $this->belongsTo(Ingrediente::class,'id_ingrediente');
+    }
 }

@@ -21,7 +21,9 @@ require __DIR__.'/auth.php';
 
 Route::resource('personas',App\Http\Controllers\PersonaController::class);
 Route::resource('familiares',App\Http\Controllers\FamiliarController::class);
-Route::resource('platos',App\Http\Controllers\PlatoController::class);
+Route::resource('platos',App\Http\Controllers\PlatoController::class)  ->parameters([
+        'platos' => 'plato' // Changes {user} to {username}
+    ]);
 Route::resource('centros',App\Http\Controllers\CentroController::class);
 Route::resource('ingredientes',App\Http\Controllers\IngredienteController::class);
 Route::resource('menus',App\Http\Controllers\MenuController::class);

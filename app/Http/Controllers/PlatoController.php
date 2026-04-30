@@ -13,7 +13,7 @@ class PlatoController extends Controller
     public function index()
     {
         //
-        $platos = Plato::all();
+        $platos = plato::all();
         return view("platos.index", compact("platos"));
 
     }
@@ -35,8 +35,7 @@ class PlatoController extends Controller
         //
         $request->validate([
             'nombre' => 'required',
-            'precio' => 'required',
-            
+            'precio' => 'required'
         ]);
 
         Plato::create($request->all());
@@ -46,7 +45,7 @@ class PlatoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Plato $platos)
+    public function show(Plato $plato)
     {
         //
     }
@@ -54,17 +53,24 @@ class PlatoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Plato $platos)
+    public function edit(Plato $plato)
     {
-        //
+        
+        return view("platos.edit", compact("plato"));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Plato $platos)
+    public function update(Request $request, Plato $plato)
     {
-        //
+        $request->validate([
+            'nombre' => 'required',
+            'precio' => 'required'
+        ]);
+
+        $plato->update($request->all());
+        return redirect()->route("platos.index");
     }
 
     /**

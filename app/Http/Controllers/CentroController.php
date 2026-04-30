@@ -55,7 +55,7 @@ class CentroController extends Controller
      */
     public function edit(Centro $centro)
     {
-        //
+       return view("centros.edit", compact("centro"));
     }
 
     /**
@@ -64,7 +64,13 @@ class CentroController extends Controller
     public function update(Request $request, Centro $centro)
     {
         //
-       
+        $request->validate([
+            'nombre' => 'required',
+            'costo' => 'required',
+            'direccion' => 'required',
+        ]);
+        $centro->update($request->all());
+        return redirect()->route("centros.index");
     }
 
     /**

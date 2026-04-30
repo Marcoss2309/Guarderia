@@ -17,5 +17,4 @@ class Ingrediente extends Model
     protected $fillable=[
     'nombre',
     ];
-    //created_at, updated_at, deleted_at (timestamps) pueden llevar valores null
 }

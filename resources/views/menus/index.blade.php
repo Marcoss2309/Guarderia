@@ -5,47 +5,94 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
 
-           <div class="card shadow-lg border-0">
-                <div class="card-header bg-success text-white text-center">
-                    <h4 class="mb-0">Lista de Menus</h4>
+            <div class="card card-bienestar animate-fade-in">
+                <div class="card-header-bienestar text-center">
+                    <h4 class="mb-0">Los Menus del Bienestar</h4>
                 </div>
-               <div class="row">
-                   <div class="col-1">
-                       <a type="button" class="btn btn-info" href="{{route("menus.create")}}">Agregar</a>
-
-                   </div>
-               </div>
 
                 <div class="card-body p-4">
 
+                    <div class="d-flex justify-content-end mb-3">
+                        <a class="btn btn-bienestar btn-sm" href="{{ route('menus.create') }}">
+                            ➕ Agregar Menú
+                        </a>
+                    </div>
+
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
+
                     <div class="table-responsive">
                         <table class="table table-hover table-striped align-middle text-center">
-                            <thead class="table-dark">
+                            <thead style="background: linear-gradient(135deg, #8B0000, #6B1D2C); color: white;">
                                 <tr>
                                     <th>No.</th>
-                                    <th>No.plato</th>
-                                    <th>No.Ingrediente</th>
-                                    <th>Accion</th>
+                                    <th>Plato</th>
+                                    <th>Ingrediente</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-
-                            @foreach($menus as $menu)
+                            @forelse($menus as $menu)
                                 <tr>
-                                    <td class="fw-bold">{{$loop->index+1}}</td>
-                                    <td>{{$menu->id_plato}}</td>
-                                    <td>{{$menu->id_ingrediente}}</td>
+                                    <td class="fw-bold">{{ $loop->iteration }}</td>
+                                    
                                     <td>
-                                        <form action="{{ route('menus.destroy', $menu) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Eliminar</button>
-
-                                        </form>
+                                        @if($menu->plato)
+                                            <span class="badge" style="background-color: #128c7e; color: white; padding: 8px 15px;">
+                                                🍽️ {{ $menu->plato->nombre }} - ${{ number_format($menu->plato->precio, 2) }}
+                                            </span>
+                                        @else
+                                            <span class="badge" style="background-color: #8B0000; color: white;">No asignado</span>
+                                        @endif
+                                    </td>
+                                    
+                                    <td>
+                                        @if($menu->ingrediente)
+                                            <span class="badge" style="background-color: #FFC107; color: #333; padding: 8px 15px;">
+                                                🥗 {{ $menu->ingrediente->nombre }}
+                                            </span>
+                                        @else
+                                            <span class="badge" style="background-color: #8B0000; color: white;">No asignado</span>
+                                        @endif
+                                    </td>
+                                    
+                                    <td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a href="{{ route('menus.edit', $menu->id_menu) }}"
+                                               class="btn btn-sm" 
+                                               style="background-color: #FFC107; color: #333; border-radius: 20px;">
+                                                ✏️ Editar
+                                            </a>
+                                            
+                                            <form action="{{ route('menus.destroy', $menu->id_menu) }}" 
+                                                  method="POST" 
+                                                  class="d-inline"
+                                                  onsubmit="return confirm('¿Eliminar menú de {{ $menu->plato->nombre ?? 'este plato' }}?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-sm" 
+                                                        style="background-color: #8B0000; color: white; border-radius: 20px;">
+                                                    🗑️ Eliminar
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
-                                @endforeach
+                            @empty
+                                <table>
+                                    <td colspan="4" class="text-center py-4">
+                                        <div class="alert alert-info mb-0">
+                                            No hay menús registrados. 
+                                            <a href="{{ route('menus.create') }}" class="alert-link">Agregar el primero</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
                             </tbody>
                         </table>
                     </div>

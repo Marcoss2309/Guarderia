@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Menu;
+use App\Models\Plato;
+use App\Models\Ingrediente;
 use Illuminate\Http\Request;
 
 class MenuController extends Controller
@@ -12,10 +14,8 @@ class MenuController extends Controller
      */
     public function index()
     {
-        //
-       $menus=Menu::all();
-        return view("menus.index" , compact("menus"));
-
+        $menus = Menu::with(['plato', 'ingrediente'])->get();
+        return view("menus.index", compact("menus"));
     }
 
     /**
@@ -23,9 +23,10 @@ class MenuController extends Controller
      */
     public function create()
     {
-        //
-        return view("menus.create");
-
+        $platos = Plato::all();
+        $ingredientes = Ingrediente::all();
+        
+        return view("menus.create", compact('platos', 'ingredientes'));
     }
 
     /**
@@ -33,15 +34,13 @@ class MenuController extends Controller
      */
     public function store(Request $request)
     {
-        //
-         $request->validate([
-            'id_plato' => 'required',
-            'id_ingrediente' => 'required',
-           
+        $request->validate([
+            'id_plato' => 'required|exists:platos,id_plato',
+            'id_ingrediente' => 'required|exists:ingredientes,id_ingrediente',
         ]);
-        //
+        
         Menu::create($request->all());
-        return redirect()->route("menus.index");
+        return redirect()->route("menus.index")->with('success', 'Menu creado exitosamente');
     }
 
     /**
@@ -49,9 +48,8 @@ class MenuController extends Controller
      */
     public function show(Menu $menu)
     {
-        //
-         $menu->delete();
-        return redirect()->route("menus.index");
+        $menu->load(['plato', 'ingrediente']);
+        return view("menus.show", compact("menu"));
     }
 
     /**
@@ -59,7 +57,10 @@ class MenuController extends Controller
      */
     public function edit(Menu $menu)
     {
-        //
+        $platos = Plato::all();
+        $ingredientes = Ingrediente::all();
+        
+        return view("menus.edit", compact("menu", "platos", "ingredientes"));
     }
 
     /**
@@ -67,7 +68,13 @@ class MenuController extends Controller
      */
     public function update(Request $request, Menu $menu)
     {
-        //
+        $request->validate([
+            'id_plato' => 'required|exists:platos,id_plato',
+            'id_ingrediente' => 'required|exists:ingredientes,id_ingrediente',
+        ]);
+        
+        $menu->update($request->all());
+        return redirect()->route("menus.index")->with('success', 'Menu actualizado exitosamente');
     }
 
     /**
@@ -75,9 +82,7 @@ class MenuController extends Controller
      */
     public function destroy(Menu $menu)
     {
-        //
-        $menu->delete();
-        return redirect()->route("menus.index");
-
+        $menu->forceDelete(); // o $menu->delete() si quieres SoftDelete
+        return redirect()->route("menus.index")->with('success', 'Menu eliminado exitosamente');
     }
 }

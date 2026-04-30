@@ -3,57 +3,107 @@
 @section("content")
 
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-md-12">
 
-           <div class="card shadow-lg border-0">
-                <div class="card-header bg-success text-white text-center">
-                    <h4 class="mb-0">Lista de Ninios</h4>
+            <div class="card card-bienestar animate-fade-in">
+                <div class="card-header-bienestar text-center">
+                    <h4 class="mb-0">Los Niños del Bienestar</h4>
                 </div>
-               <div class="row">
-                   <div class="col-1">
-                       <a type="button" class="btn btn-info" href="{{route('ninios.create')}}">Agregar</a>
-
-                   </div>
-               </div>
 
                 <div class="card-body p-4">
 
+                    <div class="d-flex justify-content-end mb-3">
+                        <a class="btn btn-bienestar btn-sm" href="{{ route('ninios.create') }}">
+                            ➕ Agregar Niño
+                        </a>
+                    </div>
+
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
+
                     <div class="table-responsive">
                         <table class="table table-hover table-striped align-middle text-center">
-                            <thead class="table-dark">
+                            <thead style="background: linear-gradient(135deg, #8B0000, #6B1D2C); color: white;">
                                 <tr>
                                     <th>No.</th>
-                                    <th>Matricula</th>
-                                    <th>No. Persona</th>
-                                    <th>No. Centro</th>
-                                    <th>Fecha fecha_ingreso</th>
+                                    <th>Matrícula</th>
+                                    <th>Persona (Niño/a)</th>
+                                    <th>Centro Educativo</th>
+                                    <th>Fecha Ingreso</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-
-                            @foreach($ninios as $ninio)
+                            @forelse($ninios as $ninio)
                                 <tr>
-                                    <td class="fw-bold">{{$loop->index+1}}</td>
-                                    <td>{{$ninio->matricula}}</td>
-                                    <td>{{$ninio->id_persona}}</td>
-                                    <td>{{$ninio->id_centro}}</td>
+                                    <td class="fw-bold">{{ $loop->iteration }}</td>
+                                    <td>{{ $ninio->matricula }}</td>
+                                    
                                     <td>
-                                        <span class="badge bg-info text-dark">
-                                            {{$ninio->fecha_ingreso}}
+                                        @if($ninio->persona)
+                                            <span class="badge" style="background-color: #128c7e; color: white;">
+                                                👶 {{ $ninio->persona->nombre }} 
+                                                {{ $ninio->persona->apellido_paterno }} 
+                                                {{ $ninio->persona->apellido_materno }}
+                                            </span>
+                                        @else
+                                            <span class="badge" style="background-color: #8B0000; color: white;">No asignada</span>
+                                        @endif
+                                    </td>
+                                    
+                                    <td>
+                                        @if($ninio->centro)
+                                            <span class="badge" style="background-color: #FFC107; color: #333;">
+                                                🏫 {{ $ninio->centro->nombre }}
+                                            </span>
+                                        @else
+                                            <span class="badge" style="background-color: #8B0000; color: white;">No asignado</span>
+                                        @endif
+                                    </td>
+                                    
+                                    <td>
+                                        <span class="badge" style="background-color: #6c757d; color: white;">
+                                            📅 {{ \Carbon\Carbon::parse($ninio->fecha_ingreso)->format('d/m/Y') }}
                                         </span>
                                     </td>
+                                    
                                     <td>
-                                        <form action="{{route('ninios.destroy',$ninio)}}" method="post">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Eliminar</button>
-
-                                        </form>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a href="{{ route('ninios.edit', $ninio->id_ninio) }}"
+                                               class="btn btn-sm" 
+                                               style="background-color: #FFC107; color: #333; border-radius: 20px;">
+                                                ✏️ Editar
+                                            </a>
+                                            
+                                            <form action="{{ route('ninios.destroy', $ninio->id_ninio) }}" 
+                                                  method="post" 
+                                                  class="d-inline"
+                                                  onsubmit="return confirm('¿Eliminar a {{ $ninio->persona->nombre ?? 'este niño' }}?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-sm" 
+                                                        style="background-color: #8B0000; color: white; border-radius: 20px;">
+                                                    🗑️ Eliminar
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </tr>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center py-4">
+                                        <div class="alert alert-info mb-0">
+                                            No hay niños registrados. 
+                                            <a href="{{ route('ninios.create') }}" class="alert-link">Agregar el primero</a>
+                                        </div>
                                     </td>
                                 </tr>
-                                @endforeach
+                            @endforelse
                             </tbody>
                         </table>
                     </div>

@@ -6,21 +6,21 @@
         <div class="col-md-6">
 
             <div class="card card-bienestar animate-fade-in">
-                <div class="card-header-bienestar text-center">
-                    <h4 class="mb-0">➕ Agregar Ingrediente</h4>
+                <div class="card-header-bienestar text-center" style="background: linear-gradient(135deg, #FFC107, #e6a800);">
+                    <h4 class="mb-0">✏️ Editar Ingrediente: {{ $ingrediente->nombre }}</h4>
                 </div>
 
                 <div class="card-body p-4">
-                    <form action="{{ route('ingredientes.store') }}" method="post">
+                    <form action="{{ route('ingredientes.update', $ingrediente->id_ingrediente) }}" method="POST">
                         @csrf
+                        @method('PUT')
 
                         <div class="mb-3">
                             <label class="form-label fw-bold" style="color: #8B0000;">🥗 Nombre del Ingrediente</label>
                             <input type="text" 
                                    class="form-control @error('nombre') is-invalid @enderror" 
                                    name="nombre" 
-                                   placeholder="Ej. Tomate, Cebolla, Queso" 
-                                   value="{{ old('nombre') }}" 
+                                   value="{{ old('nombre', $ingrediente->nombre) }}"
                                    required>
                             @error('nombre')
                                 <span class="text-danger">{{ $message }}</span>
@@ -29,8 +29,9 @@
 
                         <div class="d-flex justify-content-between mt-4">
                             <a href="{{ route('ingredientes.index') }}" class="btn btn-outline-secondary">Cancelar</a>
-                            <button type="reset" class="btn btn-outline-warning">Limpiar</button>
-                            <button type="submit" class="btn btn-bienestar px-4">💾 Guardar Ingrediente</button>
+                            <button type="submit" class="btn btn-bienestar px-4" style="background: linear-gradient(135deg, #FFC107, #e6a800); color: #333;">
+                                💾 Actualizar Ingrediente
+                            </button>
                         </div>
 
                     </form>

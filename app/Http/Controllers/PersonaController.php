@@ -55,9 +55,9 @@ class PersonaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Persona $persona)
+    public function edit(Persona $persona) // Laravel busca automáticamente el ID por ti
     {
-        //
+        return view("personas.edit", compact("persona"));
     }
 
     /**
@@ -65,7 +65,15 @@ class PersonaController extends Controller
      */
     public function update(Request $request, Persona $persona)
     {
-        //
+        $request->validate([
+            'nombre' => 'required',
+            'apellido_paterno' => 'required',
+            'apellido_paterno' => 'required',
+            'fecha_nacimiento' => 'required',
+        ]);
+
+        $persona->update($request->all());
+        return redirect()->route("personas.index");
     }
 
     /**
