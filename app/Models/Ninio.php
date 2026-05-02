@@ -29,4 +29,9 @@ class Ninio extends Model
     {
         return $this->belongsTo(Centro::class, 'id_centro', 'id_centro');
     }
+    // En app/Models/Ninio.php, agrega:
+    public function abonos()
+    {
+        return $this->hasMany(Abono::class, 'id_ninio', 'id_ninio');
+    }
 }

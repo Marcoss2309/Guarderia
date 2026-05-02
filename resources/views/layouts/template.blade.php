@@ -88,6 +88,9 @@
             <li class="nav-item">
               <a class="nav-link {{ request()->is('ingredientes*') ? 'active' : '' }}" href="{{url('ingredientes')}}">Ingredientes</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link {{ request()->is('abonos*') ? 'active' : '' }}" href="{{ route('abonos.index') }}">Abonos</a>
+            </li>
           </ul>
         </div>
       </div>

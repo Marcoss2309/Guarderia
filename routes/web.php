@@ -29,5 +29,6 @@ Route::resource('ingredientes',App\Http\Controllers\IngredienteController::class
 Route::resource('menus',App\Http\Controllers\MenuController::class);
 Route::resource('ninios',App\Http\Controllers\NinioController::class);
 Route::resource('parentescos',App\Http\Controllers\ParentescoController::class);
+Route::resource('abonos', App\Http\Controllers\AbonoController::class);
 
 
